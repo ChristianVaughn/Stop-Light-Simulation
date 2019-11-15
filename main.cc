@@ -76,7 +76,7 @@ void release() {
         for (size_t i = 0; i < 4; i++) {
             if (true) { //replace with check for not conflicting cars function
                 //add dir = ith direction
-                cv.notify_all();
+                cv.notify_one();
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
