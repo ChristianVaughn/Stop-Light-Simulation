@@ -1,5 +1,5 @@
-a.out: main.o list.o node.o
-	g++ -g -std=c++11 main.o list.o node.o
+a.out: main.cc
+	g++ main.cc -std=c++11 -lpthread
 
 
 clean:

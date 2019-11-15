@@ -3,6 +3,9 @@
 #include<queue>
 #include<vector>
 #include<thread>
+#include <condition_variable>
+#include <chrono>
+
 
 using namespace std; 
 
@@ -27,34 +30,39 @@ priority_queue <car> eq;
 priority_queue <car> sq;
 priority_queue <car> wq;
 priority_queue <car> intersection;
+string releaseDir;
 
 vector <thread> threadList;
+condition_variable cv;
 
 void go(string dir, int time) {
     //Add car to proper direction priority queue
     priority_queue <car> *qstar;
+    car newcar(dir,time);
     if (dir.at(0) == 'N') {
-        nq.push(car(dir, time));
+        //nq.push(car(dir, time));
+        nq.push(newcar);
         qstar = &nq;
     }
     else if (dir.at(0) == 'E') {
-        eq.push(car(dir, time));
+        eq.push(newcar);
         qstar = &eq;
     }
     else if (dir.at(0) == 'S') {
-        sq.push(car(dir, time));
+        sq.push(newcar);
          qstar = &sq;
     }
     else if (dir.at(0) == 'W') {
-        wq.push(car(dir, time)); 
+        wq.push(newcar); 
         qstar = &wq;
     }
-
-    // While car is not at top of queue and the release direction is == direction then cv.wait(lock)
+    while((&(qstar->top()) != &newcar) && dir==releaseDir) {
+        //cv.wait(&lock);
+    }
     intersection.push(qstar -> top());//posible switch with below
     qstar -> pop();
     //intersection.push(car(dir, time));
-    //sleep(5);
+    std::this_thread::sleep_for(std::chrono::milliseconds(5));
     cout <<"Car x is headed directionhere";
     intersection.pop();
 
@@ -64,7 +72,18 @@ void go(string dir, int time) {
   
 }
 void release() {
-    //While all queues are not empty
+    while (!nq.empty() && !eq.empty() && !sq.empty() && !wq.empty()) {
+        for (size_t i = 0; i < 4; i++) {
+            if (true) { //replace with check for not conflicting cars function
+                //add dir = ith direction
+                cv.notify_all();
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+        }
+        
+    }
+    
   
 }
 
