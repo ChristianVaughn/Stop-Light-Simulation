@@ -4,6 +4,7 @@
 #include<vector>
 #include<thread>
 #include <condition_variable>
+#include <mutex>
 #include <chrono>
 
 
@@ -33,6 +34,7 @@ priority_queue <car> intersection;
 string releaseDir;
 
 vector <thread> threadList;
+mutex mtx;
 condition_variable cv;
 
 void go(string dir, int time) {
@@ -61,7 +63,7 @@ void go(string dir, int time) {
     }
     intersection.push(qstar -> top());//posible switch with below
     qstar -> pop();
-    //intersection.push(car(dir, time));
+    intersection.push(car(dir, time));
     std::this_thread::sleep_for(std::chrono::milliseconds(5));
     cout <<"Car x is headed directionhere";
     intersection.pop();
