@@ -1,5 +1,5 @@
 a.out: main.cc
-	g++ main.cc -std=c++11 -lpthread
+	g++ main.cc -g -std=c++11 -lpthread
 
 
 clean:
