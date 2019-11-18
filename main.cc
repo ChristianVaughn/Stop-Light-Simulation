@@ -62,13 +62,14 @@ void go(string dir, int time, int id) {
         wq.push(newcar); 
         qstar = &wq;
     }
+    cout << "ThreadWaiting\n";
     while((&(qstar->top()) != &newcar) && dir==releaseDir) {
         cv.wait(lck);
     }
     intersection.push(qstar -> top());//posible switch with below
     qstar -> pop();
     intersection.push(car(dir, time,id));
-    sleep(1);
+    sleep(5);
     //std::this_thread::sleep_for(std::chrono::milliseconds(5));
     cout <<"Car ID: " << newcar.id << " is headed " << newcar.direction << endl;
     intersection.pop();
