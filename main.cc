@@ -169,8 +169,9 @@ bool noCollision(priority_queue<car> *qstar) {
     return true;
     
 }
-void releaseHelper() {
+void releaseHelper(int id) {
              std::unique_lock<std::mutex> lck(mtx);
+             readi.at(id) = true;
              cv.notify_one();
 
     }
@@ -193,32 +194,13 @@ void release() {
                 else if (i == 3) {
                     qstar = &wq;
                 }
-                //noCollision(qstar)
-            if (true) { //replace with check for not conflicting cars function
+                //
+            if (noCollision(qstar)) { //replace with check for not conflicting cars function
 
-                if ( i == 0) {
-                    releaseDir = "N";
-                    cout << releaseDir << endl;
-
-                }
-                else if(i == 1){
-                    releaseDir = "E";
-                                        cout << releaseDir << endl;
-
-
-                }
-                else if(i == 2) {
-                    releaseDir = "S";
-                                        cout << releaseDir << endl;
-
-                }
-                else if (i == 3) {
-                    releaseDir = "W";
-                    cout << releaseDir << endl;
-                }
+        
                 //add dir = ith direction
                 //lck.unlock();
-                releaseHelper();
+                releaseHelper(qstar->top().id);
                 
                 cout << "REEEEEEEEEEEEEEEEEEEEEEEEEEEEE\n";
 
