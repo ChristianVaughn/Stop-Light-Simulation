@@ -3,6 +3,10 @@
         "mutex": "cpp",
         "thread": "cpp",
         "ostream": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "queue": "cpp",
+        "deque": "cpp",
+        "vector": "cpp",
+        "xstring": "cpp"
     }
 }

@@ -93,7 +93,7 @@ struct car {
     
 };
 bool operator<(const car& a, const car& b) {
-        return a.time < b.time;
+        return a.time > b.time;
 }
 
 
@@ -102,18 +102,16 @@ priority_queue <car> nq;
 priority_queue <car> eq;
 priority_queue <car> sq;
 priority_queue <car> wq;
-priority_queue <car> intersection;
+queue <car> intersection;
+
 vector <bool> readi;
 int ggwp = 0;
-string releaseDir = "F";
-
 vector <thread> threadList;
 mutex mtx;
 condition_variable cv;
 
 void go(string dir, int time, int id) {
      std::unique_lock<std::mutex> lck(mtx);
-    //Add car to proper direction priority queue
     priority_queue <car> *qstar;
     car newcar(dir,time,id);
     if (dir.at(0) == 'N') {
@@ -133,8 +131,9 @@ void go(string dir, int time, int id) {
         qstar = &wq;
     }
     cout <<"Car ID: " << newcar.id << " has arrived " << newcar.direction << endl;
-    while(!readi.at(id)) {
-        //cout << "IWORKKKKKKKKKKKKKKKKKKKKKKKKKKKK\n";
+
+    while(!readi.at(newcar.id)) {
+        //cout << "car_" << newcar.id << " waiting" << endl;
         cv.wait(lck);
     }
     
@@ -148,25 +147,31 @@ void go(string dir, int time, int id) {
     cout <<"Car ID: " << newcar.id << " is headed " << newcar.direction << endl;
     intersection.pop();
 
-
+    qstar = NULL;
+    delete qstar;
 
 
   
 }
-bool noCollision(priority_queue<car> *qstar) {
+bool noCollision(car thiscar) {
     if (intersection.empty()) {
         return true;
     }
-    for (size_t i = 0; i < qstar->top().cc.size(); i++)
+    queue<car> internet = intersection;
+
+    while(!(internet.empty())) {
+    for (size_t i = 0; i < thiscar.cc.size(); i++)
     {
-        for (size_t j = 0; j < intersection.top().cc.size(); j++)
+        for (size_t j = 0; j < internet.front().cc.size(); j++)
         {
-            if (qstar->top().cc.at(i) == intersection.top().cc.at(j)){
+            if (thiscar.cc.at(i) == internet.front().cc.at(j)){
                 return false;
             }
         }
     }
+    }
     return true;
+
     
 }
 void releaseHelper(int id) {
@@ -176,8 +181,10 @@ void releaseHelper(int id) {
 
     }
 void release() {
+
         priority_queue <car> *qstar;
-    while (!nq.empty() && !eq.empty() && !sq.empty() && !wq.empty()) {
+    while (!(nq.empty() && eq.empty() && sq.empty() && wq.empty())) {
+
 
         for (size_t i = 0; i < 4; i++) {
             //mtx.lock();
@@ -195,41 +202,43 @@ void release() {
                     qstar = &wq;
                 }
                 //
-            if (noCollision(qstar)) { //replace with check for not conflicting cars function
+            if (noCollision(qstar->top())) { //replace with check for not conflicting cars function
 
         
                 //add dir = ith direction
                 //lck.unlock();
                 releaseHelper(qstar->top().id);
                 
-                cout << "REEEEEEEEEEEEEEEEEEEEEEEEEEEEE\n";
-
                 //mtx.unlock();
-                //sleep(1);
+               // sleep(1);
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
         }
         
     }
-    
+    qstar = NULL;
+    delete qstar;
+
   
 }
 
 
 int main() {
-    
-
-
+    //car newcar("N",1000,1000);
+    //nq.push(newcar);
+    //sq.push(newcar);
+    //eq.push(newcar);
+    //wq.push(newcar);
     int temp;
     string temp2;
-    vector<car> carsList;
-    ifstream ifs("simple.txt", ifstream::in);
+    ifstream ifs("difficult.txt", ifstream::in);
     int i = 0;
+
     while (ifs >> temp >> temp2) {
 
         threadList.push_back(thread(go,temp2,temp,i)); //Create a new thread and add it to the list
-        readi.push_back(i);
+        readi.push_back(false);
         i++;
     }
     ifs.close();
