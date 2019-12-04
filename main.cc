@@ -103,6 +103,8 @@ priority_queue <car> eq;
 priority_queue <car> sq;
 priority_queue <car> wq;
 queue <car> intersection;
+std::ofstream outputfile;
+
 
 vector <bool> readi;
 int ggwp = 0;
@@ -146,6 +148,7 @@ void go(string dir, int time, int id) {
     //std::this_thread::sleep_for(std::chrono::milliseconds(5));
     cout <<"Car ID: " << newcar.id << " is headed " << newcar.direction << endl;
     intersection.pop();
+    outputfile << newcar.time << " " << newcar.direction << endl;
 
     qstar = NULL;
     delete qstar;
@@ -224,17 +227,24 @@ void release() {
 }
 
 
-int main() {
+int main(int argc,char* argv[]) {
     //car newcar("N",1000,1000);
     //nq.push(newcar);
     //sq.push(newcar);
     //eq.push(newcar);
     //wq.push(newcar);
+    if (argc != 2) {
+        cout << "Improper use.\nPlease use: ./a.out filename\n";
+        exit(EXIT_FAILURE);
+    }
+    std::chrono::time_point<std::chrono::system_clock> start, end; 
+
     int temp;
     string temp2;
-    ifstream ifs("medium.txt", ifstream::in);
+    ifstream ifs(argv[1], ifstream::in);
+    outputfile.open("Output.txt", ofstream::out);
     int i = 0;
-
+    start = std::chrono::system_clock::now(); 
     while (ifs >> temp >> temp2) {
 
         threadList.push_back(thread(go,temp2,temp,i)); //Create a new thread and add it to the list
@@ -248,6 +258,10 @@ int main() {
         threadList[i].join();
     }
     mainthread.join();
+    end = std::chrono::system_clock::now(); 
+    outputfile.close();
+        std::chrono::duration<double> elapsed_seconds = end - start; 
+        std::cout <<"elapsed time: " << elapsed_seconds.count() << "s\n"; 
 
     
 }
