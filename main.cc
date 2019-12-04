@@ -232,7 +232,7 @@ int main() {
     //wq.push(newcar);
     int temp;
     string temp2;
-    ifstream ifs("difficult.txt", ifstream::in);
+    ifstream ifs("medium.txt", ifstream::in);
     int i = 0;
 
     while (ifs >> temp >> temp2) {
