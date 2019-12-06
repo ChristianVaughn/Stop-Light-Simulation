@@ -1,3 +1,7 @@
+//144 Project
+//Christian Vaughn
+//Fall 2019
+
 #include<iostream>
 #include <fstream>
 #include<queue>
@@ -34,58 +38,58 @@ struct car {
         }
         else if (direction == "NE")
         {
-            /* code */
+
             cc.push_back(3);
         }
         else if (direction == "S")
         {
-            /* code */
+
             cc.push_back(0);
             cc.push_back(2); 
         }
         else if (direction == "SW")
         {
-            /* code */
+
             cc.push_back(0);
             cc.push_back(3); 
         }
         else if (direction == "SE")
         {
-            /* code */
+
             cc.push_back(0);
         }
         else if (direction == "W")
         {
-            /* code */
+
             cc.push_back(0);
             cc.push_back(1); 
         }
         else if (direction == "WN")
         {
-            /* code */
+
             cc.push_back(1);
             cc.push_back(2); 
         }
         else if (direction == "WS")
         {
-            /* code */
+
             cc.push_back(1);
         }
         else if (direction == "E")
         {
-            /* code */
+
             cc.push_back(2);
             cc.push_back(3); 
         }
         else if (direction == "EN")
         {
-            /* code */
+
             cc.push_back(2);
             cc.push_back(1); 
         }
         else if (direction == "ES")
         {
-            /* code */
+
             cc.push_back(2);
         }
         
